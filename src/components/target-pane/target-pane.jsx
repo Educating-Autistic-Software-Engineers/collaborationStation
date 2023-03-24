@@ -1,8 +1,12 @@
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import VM from 'scratch-vm';
 
+import Box from '../box/box.jsx';
+import { FormattedMessage } from 'react-intl';
+import Label from '../forms/label.jsx';
 import SpriteLibrary from '../../containers/sprite-library.jsx';
 import SpriteSelectorComponent from '../sprite-selector/sprite-selector.jsx';
 import StageSelector from '../../containers/stage-selector.jsx';
@@ -46,12 +50,9 @@ const TargetPane = ({
     sprites,
     vm,
     ...componentProps
-}) => (
-    <div
-        className={styles.targetPane}
-        {...componentProps}
-    >
-
+}) => {
+    // Add mapping from spries to scenes here?
+    const thisSpriteSelectorComponent = 
         <SpriteSelectorComponent
             editingTarget={editingTarget}
             hoveredTarget={hoveredTarget}
@@ -77,7 +78,9 @@ const TargetPane = ({
             onSelectSprite={onSelectSprite}
             onSpriteUpload={onSpriteUpload}
             onSurpriseSpriteClick={onSurpriseSpriteClick}
-        />
+        />;
+
+    const thisStageSelectorWrapper = 
         <div className={styles.stageSelectorWrapper}>
             {stage.id && <StageSelector
                 asset={
@@ -98,9 +101,34 @@ const TargetPane = ({
                     />
                 ) : null}
             </div>
-        </div>
-    </div>
-);
+        </div>;
+
+    const SceneSelectorComponent = 
+        <Box
+            className={classNames(styles.sceneSelector, {
+                [styles.isSelected]: true,
+            })}
+        >
+            <div className={styles.header}>
+                <div className={styles.headerTitle}>
+                    <FormattedMessage
+                        defaultMessage="Scene 1"
+                        description="Label for the stage in the stage selector"
+                        id="gui.scene"
+                    />
+                </div>
+            </div>
+            <div
+                className={styles.targetPane}
+                {...componentProps}
+            >
+                {thisSpriteSelectorComponent}
+                {thisStageSelectorWrapper}
+            </div>
+        </Box>;
+
+    return SceneSelectorComponent;
+}
 
 const spriteShape = PropTypes.shape({
     costume: PropTypes.shape({

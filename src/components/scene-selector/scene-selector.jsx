@@ -40,7 +40,7 @@ const messages = defineMessages({
     }
 });
 
-const SpriteSelectorComponent = function (props) {
+const SceneSelectorComponent = function (props) {
     const {
         editingTarget,
         hoveredTarget,
@@ -81,7 +81,7 @@ const SpriteSelectorComponent = function (props) {
             {...componentProps}
         >
 
-            {/* <SpriteInfo
+            <SpriteInfo
                 direction={selectedSprite.direction}
                 disabled={spriteInfoDisabled}
                 name={selectedSprite.name}
@@ -98,7 +98,7 @@ const SpriteSelectorComponent = function (props) {
                 onChangeVisibility={onChangeSpriteVisibility}
                 onChangeX={onChangeSpriteX}
                 onChangeY={onChangeSpriteY}
-            /> */}
+            />
 
             <SpriteList
                 editingTarget={editingTarget}
@@ -146,7 +146,7 @@ const SpriteSelectorComponent = function (props) {
     );
 };
 
-SpriteSelectorComponent.propTypes = {
+SceneSelectorComponent.propTypes = {
     editingTarget: PropTypes.string,
     hoveredTarget: PropTypes.shape({
         hoveredSprite: PropTypes.string,
@@ -189,4 +189,4 @@ SpriteSelectorComponent.propTypes = {
     stageSize: PropTypes.oneOf(Object.keys(STAGE_DISPLAY_SIZES)).isRequired
 };
 
-export default injectIntl(SpriteSelectorComponent);
+export default injectIntl(SceneSelectorComponent);

@@ -71,7 +71,7 @@ const StageSelector = props => {
             onMouseLeave={onMouseLeave}
             {...componentProps}
         >
-            <div className={styles.header}>
+            {/* <div className={styles.header}>
                 <div className={styles.headerTitle}>
                     <FormattedMessage
                         defaultMessage="Stage"
@@ -79,7 +79,7 @@ const StageSelector = props => {
                         id="gui.stageSelector.stage"
                     />
                 </div>
-            </div>
+            </div> */}
             {url ? (
                 <img
                     className={styles.costumeCanvas}
