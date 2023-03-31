@@ -1,0 +1,12 @@
+.hero-hero {
+  border: 2px dashed rgba(120, 120, 120, 0.4);
+  height: 772px;
+  position: relative;
+  align-items: center;
+  border-color: #000000;
+  border-width: 1px;
+  border-radius: var(--dl-radius-radius-radius4);
+  padding-bottom: 0px;
+  justify-content: center;
+  background-color: transparent;
+}
