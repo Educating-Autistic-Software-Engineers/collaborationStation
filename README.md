@@ -1,6 +1,6 @@
 # Collaboration Station
 
-## Note: index.html is the log in page. 
+## Note: [index.html](index.html) is the log in page. 
 
 This part below is for running the collaboration code (this is no longer running on the website):
 
