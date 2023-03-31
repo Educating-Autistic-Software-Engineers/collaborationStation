@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 
 import VM from 'scratch-vm';
 
@@ -52,82 +52,121 @@ const TargetPane = ({
     ...componentProps
 }) => {
     // Add mapping from spries to scenes here?
-    const thisSpriteSelectorComponent = 
-        <SpriteSelectorComponent
-            editingTarget={editingTarget}
-            hoveredTarget={hoveredTarget}
-            raised={raiseSprites}
-            selectedId={editingTarget}
-            spriteFileInput={fileInputRef}
-            sprites={sprites}
-            stageSize={stageSize}
-            onChangeSpriteDirection={onChangeSpriteDirection}
-            onChangeSpriteName={onChangeSpriteName}
-            onChangeSpriteRotationStyle={onChangeSpriteRotationStyle}
-            onChangeSpriteSize={onChangeSpriteSize}
-            onChangeSpriteVisibility={onChangeSpriteVisibility}
-            onChangeSpriteX={onChangeSpriteX}
-            onChangeSpriteY={onChangeSpriteY}
-            onDeleteSprite={onDeleteSprite}
-            onDrop={onDrop}
-            onDuplicateSprite={onDuplicateSprite}
-            onExportSprite={onExportSprite}
-            onFileUploadClick={onFileUploadClick}
-            onNewSpriteClick={onNewSpriteClick}
-            onPaintSpriteClick={onPaintSpriteClick}
-            onSelectSprite={onSelectSprite}
-            onSpriteUpload={onSpriteUpload}
-            onSurpriseSpriteClick={onSurpriseSpriteClick}
-        />;
+    // console.log(sprites);
+    // if (localStorage.getItem("scenes") == null && sprites.length ==  1) {
+    //     localStorage.setItem("scenes", {
+    //         1: sprites.length == 1 ? JSON.stringify(sprites[0]) : null
+    //     })
+    // }
+    // if (localStorage.getItem("currSceneId") == null && sprites.length == 1) {
+    //     localStorage.setItem("currSceneId", 1);
+    // }
+    const [scenes, setScenes] = useState({});
+    const [currSceneId, setCurrSceneId] = useState(1);
+    
+    console.log(sprites, Object.keys(sprites).length, Object.keys(scenes).length == 0);
 
-    const thisStageSelectorWrapper = 
-        <div className={styles.stageSelectorWrapper}>
-            {stage.id && <StageSelector
-                asset={
-                    stage.costume &&
-                    stage.costume.asset
-                }
-                backdropCount={stage.costumeCount}
-                id={stage.id}
-                selected={stage.id === editingTarget}
-                onSelect={onSelectSprite}
-            />}
-            <div>
-                {spriteLibraryVisible ? (
-                    <SpriteLibrary
-                        vm={vm}
-                        onActivateBlocksTab={onActivateBlocksTab}
-                        onRequestClose={onRequestCloseSpriteLibrary}
-                    />
-                ) : null}
-            </div>
-        </div>;
+    const addScene = () => {
+        const newId = Object.keys(scenes).length + 1;
+        const newScenes = {...scenes};
+        newScenes[newId] = {};
+        setScenes(newScenes);
+        console.log(newId);
+    }
 
-    const SceneSelectorComponent = 
-        <Box
-            className={classNames(styles.sceneSelector, {
-                [styles.isSelected]: true,
-            })}
-        >
-            <div className={styles.header}>
-                <div className={styles.headerTitle}>
-                    <FormattedMessage
-                        defaultMessage="Scene 1"
-                        description="Label for the stage in the stage selector"
-                        id="gui.scene"
-                    />
-                </div>
-            </div>
-            <div
-                className={styles.targetPane}
-                {...componentProps}
+    const handleClick = (e) => {
+        e.preventDefault();
+        console.log('The link was clicked.');
+    }
+
+    if (Object.keys(scenes).length == 0 && Object.keys(sprites).length == 1) {
+        console.log(sprites);
+        const prevScenes = {...scenes};
+        prevScenes[1] = sprites;
+        setScenes(prevScenes);
+    }
+
+    if (Object.keys(sprites).length > Object.keys(scenes).length ){
+        console.log(sprites);
+    }
+
+    const SceneSelectorComponent = ({sceneId}) => {
+        console.log(scenes[sceneId])
+        return (
+            <Box
+                className={classNames(styles.sceneSelector, {
+                    [styles.isSelected]: sceneId == currSceneId,
+                })}
             >
-                {thisSpriteSelectorComponent}
-                {thisStageSelectorWrapper}
-            </div>
-        </Box>;
+                <div className={styles.header}>
+                    <div className={styles.headerTitle}>
+                        <FormattedMessage
+                            defaultMessage={`Scene 1`}
+                            description="Label for the stage in the stage selector"
+                            id="gui.scene"
+                        />
+                    </div>
+                </div>
+                <div
+                    className={styles.targetPane}
+                    {...componentProps}
+                >
+                    <SpriteSelectorComponent
+                        editingTarget={editingTarget}
+                        hoveredTarget={hoveredTarget}
+                        raised={raiseSprites}
+                        selectedId={editingTarget}
+                        spriteFileInput={fileInputRef}
+                        sprites={scenes[sceneId] ?? sprites}
+                        stageSize={stageSize}
+                        onChangeSpriteDirection={onChangeSpriteDirection}
+                        onChangeSpriteName={onChangeSpriteName}
+                        onChangeSpriteRotationStyle={onChangeSpriteRotationStyle}
+                        onChangeSpriteSize={onChangeSpriteSize}
+                        onChangeSpriteVisibility={onChangeSpriteVisibility}
+                        onChangeSpriteX={onChangeSpriteX}
+                        onChangeSpriteY={onChangeSpriteY}
+                        onDeleteSprite={onDeleteSprite}
+                        onDrop={onDrop}
+                        onDuplicateSprite={onDuplicateSprite}
+                        onExportSprite={onExportSprite}
+                        onFileUploadClick={onFileUploadClick}
+                        onNewSpriteClick={onNewSpriteClick}
+                        onPaintSpriteClick={onPaintSpriteClick}
+                        onSelectSprite={onSelectSprite}
+                        onSpriteUpload={onSpriteUpload}
+                        onSurpriseSpriteClick={onSurpriseSpriteClick}
+                    />
+                    <div className={styles.stageSelectorWrapper}>
+                        {stage.id && <StageSelector
+                            asset={
+                                stage.costume &&
+                                stage.costume.asset
+                            }
+                            backdropCount={stage.costumeCount}
+                            id={stage.id}
+                            selected={stage.id === editingTarget}
+                            onSelect={onSelectSprite}
+                        />}
+                        <div>
+                            {spriteLibraryVisible ? (
+                                <SpriteLibrary
+                                    vm={vm}
+                                    onActivateBlocksTab={onActivateBlocksTab}
+                                    onRequestClose={onRequestCloseSpriteLibrary}
+                                />
+                            ) : null}
+                        </div>
+                    </div>
+                </div>
+            </Box>
+        );
+    }
 
-    return SceneSelectorComponent;
+    return <div className={styles.sceneWrapper}>
+        {Object.keys(scenes).map(sceneId => <SceneSelectorComponent sceneId={sceneId} />)}
+        <button onClick={addScene}>Click</button>
+    </div>;
 }
 
 const spriteShape = PropTypes.shape({
