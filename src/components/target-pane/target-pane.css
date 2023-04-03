@@ -58,6 +58,15 @@
     flex-shrink: 0;
 }
 
+/* Hide the add backdrop/sprite button for non-currrent scenes */
+div[class^='action-menu_menu-container'], div[class*=' action-menu_menu-container']{
+    display: none;
+}
+
+.is-selected div[class^='action-menu_menu-container'], div[class*=' action-menu_menu-container']{
+    display: flex;
+}
+
 [dir="ltr"] .stage-selector-wrapper {
     margin-left: calc($space / 2);
 }

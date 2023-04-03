@@ -51,21 +51,11 @@ const TargetPane = ({
     vm,
     ...componentProps
 }) => {
-    // Add mapping from spries to scenes here?
-    // console.log(sprites);
-    // if (localStorage.getItem("scenes") == null && sprites.length ==  1) {
-    //     localStorage.setItem("scenes", {
-    //         1: sprites.length == 1 ? JSON.stringify(sprites[0]) : null
-    //     })
-    // }
-    // if (localStorage.getItem("currSceneId") == null && sprites.length == 1) {
-    //     localStorage.setItem("currSceneId", 1);
-    // }
+    // Add mapping from spries to scenes here
     const [scenes, setScenes] = useState({});
     const [currSceneId, setCurrSceneId] = useState(1);
+    const [spriteCount, setSpriteCount] = useState(0);
     
-    console.log(sprites, Object.keys(sprites).length, Object.keys(scenes).length == 0);
-
     const addScene = () => {
         const newId = Object.keys(scenes).length + 1;
         const newScenes = {...scenes};
@@ -74,37 +64,31 @@ const TargetPane = ({
         console.log(newId);
     }
 
-    const handleClick = (e) => {
-        e.preventDefault();
-        console.log('The link was clicked.');
-    }
+    if (spriteCount < Object.keys(sprites).length) {
+        // console.log(sprites);
+        // console.log(scenes[currSceneId]);
+        const newScenes = {...scenes};
 
-    if (Object.keys(scenes).length == 0 && Object.keys(sprites).length == 1) {
-        console.log(sprites);
-        const prevScenes = {...scenes};
-        prevScenes[1] = sprites;
-        setScenes(prevScenes);
-    }
-
-    if (Object.keys(sprites).length > Object.keys(scenes).length ){
-        console.log(sprites);
+        const newSprites = {...scenes[currSceneId]};
+        const newSprite = sprites[Object.keys(sprites)[Object.keys(sprites).length-1]]
+        newSprites[Object.keys(sprites)[Object.keys(sprites).length-1]] = newSprite;
+        
+        newScenes[currSceneId] = newSprites;
+        setScenes(newScenes);
+        setSpriteCount(spriteCount + 1);
     }
 
     const SceneSelectorComponent = ({sceneId}) => {
-        console.log(scenes[sceneId])
+        // console.log(scenes[sceneId])
         return (
             <Box
                 className={classNames(styles.sceneSelector, {
                     [styles.isSelected]: sceneId == currSceneId,
                 })}
             >
-                <div className={styles.header}>
+                <div className={styles.header} onClick={() => setCurrSceneId(sceneId)}>
                     <div className={styles.headerTitle}>
-                        <FormattedMessage
-                            defaultMessage={`Scene 1`}
-                            description="Label for the stage in the stage selector"
-                            id="gui.scene"
-                        />
+                        Scene {sceneId}
                     </div>
                 </div>
                 <div
@@ -165,7 +149,7 @@ const TargetPane = ({
 
     return <div className={styles.sceneWrapper}>
         {Object.keys(scenes).map(sceneId => <SceneSelectorComponent sceneId={sceneId} />)}
-        <button onClick={addScene}>Click</button>
+        <button onClick={addScene}>Add Scene</button>
     </div>;
 }
 
