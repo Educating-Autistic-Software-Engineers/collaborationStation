@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React, {useState, useEffect} from 'react';
+import React, {useState } from 'react';
 
 import VM from 'scratch-vm';
 
@@ -56,17 +56,34 @@ const TargetPane = ({
     const [currSceneId, setCurrSceneId] = useState(1);
     const [spriteCount, setSpriteCount] = useState(0);
     
-    const addScene = () => {
+    function addScene() {
         const newId = Object.keys(scenes).length + 1;
         const newScenes = {...scenes};
         newScenes[newId] = {};
         setScenes(newScenes);
-        console.log(newId);
     }
 
+    function onDeleteSpriteInScene(spriteId) {
+        console.log(scenes, scenes.length);
+        if (spriteId in scenes[currSceneId]) {
+            // We can delete it.
+            const newScenes = {...scenes};
+
+            const newSprites = {...scenes[currSceneId]};
+            delete newSprites[spriteId];
+
+            newScenes[currSceneId] = newSprites;
+            setScenes(newScenes);
+            setSpriteCount(spriteCount - 1);
+
+            onDeleteSprite(spriteId);
+        } else {
+            alert(`You can only delete sprites in the scene you are currently on. You are on Scene ${currSceneId}, which doesn't contain the sprite you are trying to delete.`);
+        }
+    }
+
+    // Add sprite
     if (spriteCount < Object.keys(sprites).length) {
-        // console.log(sprites);
-        // console.log(scenes[currSceneId]);
         const newScenes = {...scenes};
 
         const newSprites = {...scenes[currSceneId]};
@@ -110,7 +127,7 @@ const TargetPane = ({
                         onChangeSpriteVisibility={onChangeSpriteVisibility}
                         onChangeSpriteX={onChangeSpriteX}
                         onChangeSpriteY={onChangeSpriteY}
-                        onDeleteSprite={onDeleteSprite}
+                        onDeleteSprite={onDeleteSpriteInScene}
                         onDrop={onDrop}
                         onDuplicateSprite={onDuplicateSprite}
                         onExportSprite={onExportSprite}
